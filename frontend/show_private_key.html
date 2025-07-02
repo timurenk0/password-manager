@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Save Your Private Key</title>
+</head>
+<body>
+    <h2>Registration Successful</h2>
+    <p>Please save your private key securely. You will need it to decrypt your passwords.</p>
+    <textarea rows="10" cols="50" readonly>{{ private_key }}</textarea>
+    <br>
+    <button onclick="navigator.clipboard.writeText(document.querySelector('textarea').value)">Copy to Clipboard</button>
+    <br>
+    <a href="/login">Proceed to Login</a>
+</body>
+</html>

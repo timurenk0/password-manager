@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <h1>Welcome, {{ username }}</h1>
+            <div>
+                <a href="{{ url_for('add_password') }}" class="add-btn">Add New Password</a>
+                 <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
+        </div>
+
+        {% if passwords|length > 0 %}
+            {% for pwd in passwords %}
+                <div>
+                    <strong>{{ pwd[1] }}</strong>
+                    <p>Password: ******** <button onclick="showKeyInput({{ pwd[0] | tojson }})">Reveal</button></p>
+                    <div id="key-input-{{ pwd[0] }}" style="display: none;">
+                        <form onsubmit="revealPassword({{ pwd[0] | tojson }}); return false">
+                            <textarea id="private-key-{{ pwd[0] }}" rows="10" cols="50" placeholder="Paste your private key here..."></textarea>
+                            <br>
+                            <button type="submit">Decrypt</button>
+                            <button type="button" onclick="document.getElementById('key-input-{{ pwd[0] }}').style.display='none'">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No passwords saved yet ;(</p>
+        {% endif %}
+    </div>
+
+
+    <script>
+        function showKeyInput(passwordId) {
+            document.getElementById(`key-input-${passwordId}`).style.display = "block";
+        }
+
+        async function revealPassword(passwordId) {
+            const privateKey = document.getElementById(`private-key-${passwordId}`).value.trim();
+
+            if (privateKey) {
+                try {
+                    // If private key is retrieved successfully send request to decrypt the password to "/decrypt-password" endpoint
+                    const response = await fetch(`/decrypt-password/${passwordId}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ private_key: privateKey })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        alert("Your decrypted password: " + data.password);
+                    } else {
+                        alert("Error: " + data.error);
+                    }
+                } catch (error) {
+                    alert("Error: " + error.message)
+                }
+
+                // Keep password field hidden if private key is not fetched
+                document.getElementById(`key-input-${passwordId}`).style.display = "none";
+            } else {
+                alert("Please enter your private key")
+            }
+        }
+    </script>
+</body>
+</html>

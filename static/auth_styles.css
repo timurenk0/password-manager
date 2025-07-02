@@ -31,11 +31,18 @@ input {
 button {
     width: 100%;
     padding: 0.7rem;
-    background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+#login-button {
+    background-color: #4CAF50;
+}
+
+#register-button {
+    background-color: #56a8ce;
 }
 
 p {
