@@ -105,7 +105,7 @@ def add_password():
             conn = sq.connect(DB_NAME)
             cursor = conn.cursor()
 
-            cursor.execute("INSERT INTO passwords (user_id, password_name, password_text) VALUES (?, ?, ?)", (session["user_id"], password_name, encrypted_password))
+            cursor.execute("INSERT INTO passwords (user_id, password_name, password_text) VALUES (?, ?, ?)", (session["user_id"], password_name, encrypted_password_bytes))
 
             conn.commit()
             conn.close()

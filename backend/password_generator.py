@@ -24,7 +24,7 @@ def decrypt_with_private_key(encrypted_password, private_key_pem):
         # Decrypt the password with PKCS1v15 padding
         decrypted_password = private_key.decrypt(
             encrypted_password,
-            padding.PKCS1v15
+            padding.PKCS1v15()
         ).decode("utf-8")
 
         
